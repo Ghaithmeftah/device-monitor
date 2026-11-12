@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<section class="stats">
+    <div class="stat"><span class="stat-value" data-bind="text: devices().length">0</span><span class="stat-label">Devices</span></div>
+    <div class="stat online"><span class="stat-value" data-bind="text: onlineCount">0</span><span class="stat-label">Online</span></div>
+    <div class="stat offline"><span class="stat-value" data-bind="text: offlineCount">0</span><span class="stat-label">Offline</span></div>
+    <div class="stat"><span class="stat-value connection" data-bind="text: connectionState, css: { ok: connectionState() === 'Live' }">...</span><span class="stat-label">Updates</span></div>
+</section>
+
+<section class="card">
+    <h2>Register a device</h2>
+    <form class="add-form" data-bind="submit: addDevice">
+        <label>Name <input data-bind="textInput: newName" required minlength="2" maxlength="100" placeholder="Living room gateway" /></label>
+        <label>Serial number <input data-bind="textInput: newSerial" required pattern="[A-Za-z0-9\-]{4,32}" placeholder="GW-0002" /></label>
+        <label>Type
+            <select data-bind="options: deviceTypes, value: newType"></select>
+        </label>
+        <button type="submit" data-bind="enable: !busy()">Add device</button>
+    </form>
+    <p class="error" role="alert" data-bind="text: error, visible: error"></p>
+</section>
+
+<section class="card">
+    <h2>Devices</h2>
+    <p class="hint">Devices switch to offline when no heartbeat arrives for 30 seconds. Use "Heartbeat" to simulate one.</p>
+    <p data-bind="visible: devices().length === 0">No devices yet.</p>
+    <table class="devices" data-bind="visible: devices().length > 0">
+        <thead>
+            <tr><th>Status</th><th>Name</th><th>Serial</th><th>Type</th><th>Last seen</th><th></th></tr>
+        </thead>
+        <tbody data-bind="foreach: devices">
+            <tr>
+                <td data-label="Status"><span class="badge" data-bind="text: status, css: { online: isOnline }"></span></td>
+                <td data-label="Name" data-bind="text: name"></td>
+                <td data-label="Serial"><code data-bind="text: serialNumber"></code></td>
+                <td data-label="Type" data-bind="text: type"></td>
+                <td data-label="Last seen" data-bind="text: lastSeenText"></td>
+                <td>
+                    <div class="actions">
+                        <button type="button" data-bind="click: $parent.sendHeartbeat">Heartbeat</button>
+                        <button type="button" class="danger" data-bind="click: $parent.removeDevice">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.5.1/knockout-latest.min.js"
+            integrity="sha384-PA7LgTHoYGwvEy2evWvC3sNOQlmK/vfk//sStiSk3QK3fUDO8oN3VKvHgSPyVKqx" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"
+            integrity="sha384-mU1xC5yC2LldSW74Rj1Ax8wPiLw/28V5eh51uKJMlBbRVsOtUYd4xyzNsgIAJARB" crossorigin="anonymous"></script>
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
+}
