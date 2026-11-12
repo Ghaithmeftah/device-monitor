@@ -14,7 +14,8 @@ make sense, keeping track of connected devices (internet boxes, set-top boxes, s
 and go offline when they stop, and I'm building it on my own time.
 
 It's a learning project, not a product. I keep it small on purpose so every part is something I wrote, understand
-and can explain.
+and can explain. There is no authentication yet (anyone who can reach the app can add, delete or "heartbeat" a
+device), so run it locally and don't expose it on the internet. Per-device API keys are the first item on the list below.
 
 ## What it does
 
